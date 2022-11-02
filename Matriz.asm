@@ -125,34 +125,36 @@ endO:
 	
 	
 maxNumber:  #NÃO ESTÁ FUNCIONANDO??????????????????????/
-	addi t0, a3, -1 #puts on t0 the complete size of the vector - 1     
-	add t1, a2, zero #puts on t1 the size of the matrix
-	add t2, zero, zero #puts zero on t2 -> line -> of the Max
-	add t3, zero, zero #puts zero on t3 -> column -> of the Max
-	add t4, zero, zero #puts zero on t4 -> line -> current one
-	add t5, zero, zero #puts zero on t5 -> column -> current one
-	sw t6, 0(a1) #puts the max number on t6
+	addi t0, zero, 1 #the number of items it has passed
+	addi t2, zero, 0 #puts zero on t2 -> line -> of the Max
+	addi t3, zero, 0 #puts zero on t3 -> column -> of the Max
+	addi t4, zero, 0 #puts zero on t4 -> line -> current one
+	addi t5, zero, 0 #puts zero on t5 -> column -> current one
+	lw s0, 0(a1) # puts in s0 the contents of a1 - the first element in the list
+	add t6, zero, s0 #puts the max number on t6
+	addi a1, a1, 4 #goes through the vector
 loopMaxNumber:
-	bge zero, t0, endMaxNumber # branch if t0 (counter of matriz size) less or equal to 0 (inverted statement)
+	bgt t0, a3, endMaxNumber # branch if t0 (counter of matriz size) is grester than the entire size of the vector
+	lw s0, 0(a1)
 	addi a1, a1, 4 # goes through teh vector
-	lw a0, 0(a1)
-	addi t0, t0, -1 # decrements counter
+	addi t0, t0, 1 # decrements counter
 	addi t4, t4, 1 #increments current line
 	addi t5, t5, 1 #increments current column
-
-	bge a0, t6, ifMax #branch to ifMax if the number read is greater than the one on t6
+	
+#	li a7, 1 # 1 = print int
+#	ecall
+	
+	blt s0, t6, loopMaxNumber #branch if the number read is less than the one on t6
+	
+	mv t6, s0
+	mv t2, t4
+	mv t3, t5
 	
 	j loopMaxNumber
-
-ifMax:
-	addi t2, t4, 0
-	addi t3, t5, 0 
-	sw t6, 0(a1)
-	
-	j loopMaxNumber # jump to loopP label
 	
 endMaxNumber:
-	lw a0, 0(t6)
+	add a0, zero, t6
 	li a7, 1
 	ecall
 	ret # return
+	
