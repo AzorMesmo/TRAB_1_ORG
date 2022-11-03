@@ -1,130 +1,127 @@
 	.data
 
-numbs:	.word	1,2,3,4,5,6,7,8,9
-space:	.string	" "
-break:	.string "\n"
-inputN: .string "Number: "
-inputS: .string "Size: "
-here:   .string "Here: "
+wrd_numbers:
+	.word	1,2,3,4,5,6,7,8,9
+str_space:
+	.string	" "
+str_break:
+	.string "\n"
+str_number:
+	.string "Number: "
+str_size:
+	.string "Size: "
+str_here:  
+	.string "Here: "
 
 	.text
 	
 main:
-	la a1, numbs # set numbs to a1
-	call inputMatrix
-	call returnFirstAddress
-	call print # call print funcion
-	call returnFirstAddress
-	call maxNumber
-	li a7, 10 # 10 = end program
-	ecall # do the system call
+	la a1, wrd_numbers # coloca o {wrd_numbers} em a1
+	call inputMatrix # chama a funÁ„o {inputMatrix}
+	call returnFirstAddress # chama a funÁ„o {returnFirstAddress}
+	call print # chama a funÁ„o {print}
+	call returnFirstAddress # chama a funÁ„o {returnFirstAddress}
+	call maxNumber # chama a funÁ„o {maxNumber}
+	li a7, 10 # coloca o valor 10 em a7 (10 = finalizar programa)
+	ecall # faz a chamada de sistema (usando sempre o valor que est· em a7)
 	
-	
+# funÁ„o para imprimir a matriz
+				
 print:
-	addi t1, a2, -1 # counter of breaks (stars on 2 because we've already printed one number)
-	addi t0, a3, -1 # counter of matriz size (starts on 8 because we've already printed one number)
-	lw a0, 0(a1) # puts in a0 the contents of a1 - the first element in the list 
-	li a7, 1 # 1 = print int
-	ecall
-	la a0, space # set space to a0
-	li a7, 4
-	ecall
+	addi t1, a2, -1 # contador das quebras de linha (comeÁa em 2 pois j· imprimimos um n˙mero)
+	addi t0, a3, -1 # contador do tamanho da matriz (comeÁa em 8 pois j· imprimimos um n˙mero)
+	lw a0, 0(a1) # coloca em a0 o conteudo de a1 (o primeiro elemento da lista) 
+	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
+	ecall # faz a chamada de sistema (usando sempre o valor que est· em a7)
+	la a0, str_space # coloca o {space} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que est· em a7)
 	
 loopP:
-	beq t1, zero, breakP # branch if t1 (counter of breaks) is equal 0
-	bge zero, t0, endP # branch if t0 (counter of matriz size) less or equal to 0 (inverted statement)
-	addi a1, a1, 4 # goes through teh vector
-	lw a0, 0(a1)
-	li a7, 1
-	ecall
-	addi t0, t0, -1 # decrements counter
-	addi t1, t1, -1 # decrements counter
-	la a0, space
-	li a7, 4
-	ecall
-	j loopP # jump to loopP label
+	beq t1, zero, breakP # desvia se t1 (contador das quebras de linha) for igual a 0
+	bge zero, t0, endP # desvia se t0 (contador do tamanho da matriz) for menor ou igual a 0 ("maior que" invertido)
+	addi a1, a1, 4 # vai para o proximo valor de a1 (adicionando 4)
+	lw a0, 0(a1) # coloca em a0 o conteudo de a1 (o prÛximo elemento da lista) 
+	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
+	ecall # faz a chamada de sistema (usando sempre o valor que est· em a7)
+	addi t0, t0, -1 # decrementa o contador do tamanho da matriz
+	addi t1, t1, -1 # decrementa o contador das quebras de linha
+	la a0, str_space # coloca o {space} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que est· em a7)
+	j loopP # desvia para {loopP}
 	
 breakP:
-	la a0, break # set break to a0
-	li a7, 4
-	ecall
-	addi t1, t1, 3 # reset the counter in t1 (counter of breaks)
-	j loopP
-	
+	la a0, str_break # coloca break em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que est· em a7)
+	addi t1, t1, 3 # reinicia o contador em t1 (contador das quebras de linha)
+	j loopP # desvia para {loopP}
 	
 endP:
-	ret # return
+	ret # retorna
+	
+# funÁ„o para ler os valores da matriz
 	
 inputMatrix:
-	j inputSize #reads size
+	j inputSize # desvia para {inputSize}
+	
 readMatrix:
-	li a7, 4
-	la a0, inputN #prints "Number: "
-	ecall
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	la a0, str_number # coloca {str_number} em a0
+	ecall # faz a chamada de sistema (usando sempre o valor que est· em a7)
+	li a7, 5 # coloca o valor 5 em a7 (5 = ler inteiro)
+	ecall # faz a chamada de sistema (usando sempre o valor que est· em a7)
+	sw a0, 0(a1) # move o valor de a0 para a1
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	la a0, str_break # coloca o {str_break} em a0
+	addi t0, a3, -1 # contador do tamanho da matriz (comeÁa em [tamanho - 1] porque j· lÍ-mos um n˙mero)
 	
-	li a7, 5 #reads first number
-	ecall
-	sw a0, 0(a1) #moves number to register a1
-	
-	li a7, 4
-	la a0, break #new line
-	
-	addi t0, a3, -1   # counter of matriz size (starts on (entire size - 1) because we've already read one number)
 loopI:
-	bge zero, t0, endI # branch if t0 (counter of matriz size) less or equal to 0 (inverted statement)
-	addi a1, a1, 4 # goes through teh vector
-	
-	li a7, 4
-	la a0, inputN #prints "Number: "
-	ecall
-	
-	li a7, 5 #reads number
-	ecall
-	sw a0, 0(a1) #moves number to register a1
-	
-	addi t0, t0, -1 # decrements counter
-	
-	j loopI # jump to loopI label
+	bge zero, t0, endI # desvia se t0 (contador do tamanho da matriz) for menor ou igual a 0 ("maior que" invertido)
+	addi a1, a1, 4 # vai para o proximo valor de a1 (adicionando 4
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	la a0, str_number # coloca o {str_number} em a0
+	ecall # faz a chamada de sistema (usando sempre o valor que est· em a7)
+	li a7, 5 # coloca o valor 5 em a7 (5 = ler inteiro)
+	ecall # faz a chamada de sistema (usando sempre o valor que est· em a7)
+	sw a0, 0(a1) # move o valor de a0 para a1
+	addi t0, t0, -1 # decrementa o contador
+	j loopI # desvia para {loopI}
 	
 endI:
-	ret # return
+	ret # retorna
 	
 inputSize:
-	li a7, 4
-	la a0, inputS #prints "Size: "
-	ecall
-	
-	li a7, 5 #reads size
-	ecall
-	
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	la a0, str_size # coloca o {str_size} em a0
+	ecall # faz a chamada de sistema (usando sempre o valor que est· em a7)
+	li a7, 5 # coloca o valor 5 em a7 (5 = ler inteiro)
+	ecall # faz a chamada de sistema (usando sempre o valor que est· em a7)
 	addi t0, zero, 7
 	addi t1, zero, 1
-	
-	blt a0, t1, endI #N√ÉO EST√Å VOLTANDO SE O SIZE √â MENOR QUE 2????????????????????????????????
-	bge a0, t0, endI #returns if the size is greater than 6
-	
-	mul a3, a0, a0 #multiples the size to have the complete number and puts it on a3
-	mv a2, a0 #moves size to register a2
-	
-	li a7, 4
-	la a0, break #new line
-	
+	blt a0, t1, endI # desvia se a0 for menor que t1 [N√O FUNCIONA SE SIZE < 2]
+	bge a0, t0, endI # desvia se a0 for maior ou igual a t0
+	mul a3, a0, a0 # multiplica o tamanho por ele mesmo para obter o n˙mero de elementos da matriz e coloca em a3
+	mv a2, a0 # move a0 (tamanho) para a2
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	la a0, str_break
 	j readMatrix
 	
 returnFirstAddress:
 	addi t0, a3, -1   # counter of matriz size (starts on entire size - 1)
+	
 loopO:
 	bge zero, t0, endO # branch if t0 (counter of matriz size) less or equal to 0 (inverted statement)
 	addi a1, a1, -4 # goes through the vector
 	addi t0, t0, -1 # decrements counter
 	
 	j loopO # jump to loopI label
+	
 endO:
-	ret #return
+	ret # retorna
 	
-	
-	
-maxNumber:  #N√ÉO EST√Å FUNCIONANDO??????????????????????/
+maxNumber:  #N√ÉO EST√? FUNCIONANDO??????????????????????/
 	addi t0, zero, 1 #the number of items it has passed
 	addi t2, zero, 0 #puts zero on t2 -> line -> of the Max
 	addi t3, zero, 0 #puts zero on t3 -> column -> of the Max
@@ -133,6 +130,7 @@ maxNumber:  #N√ÉO EST√Å FUNCIONANDO??????????????????????/
 	lw s0, 0(a1) # puts in s0 the contents of a1 - the first element in the list
 	add t6, zero, s0 #puts the max number on t6
 	addi a1, a1, 4 #goes through the vector
+	
 loopMaxNumber:
 	bgt t0, a3, endMaxNumber # branch if t0 (counter of matriz size) is grester than the entire size of the vector
 	lw s0, 0(a1)
@@ -154,7 +152,7 @@ loopMaxNumber:
 	
 endMaxNumber:
 	add a0, zero, t6
-	li a7, 1
-	ecall
-	ret # return
+	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
+	ecall # faz a chamada de sistema (usando sempre o valor que est· em a7)
+	ret # retorna
 	
