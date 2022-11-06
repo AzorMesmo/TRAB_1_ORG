@@ -289,7 +289,7 @@ m_end:
 sort:
 	addi a4, a0, 0 # coloca o valor de a0 (endereço incial da matriz) em a4
 	
-	addi s0, a0, 0 # coloca em s0 a posicao atual da ordenacao
+	addi s0, a0, 0 # coloca em s0 onumero na posicao atual da ordenacao (posicao 0 de a0)
 	
 	addi t0, zero, 0 # contador de numeros ordenados
 	addi t1, a3, 0 # contador da quantidade de elementos a verificar
@@ -303,12 +303,12 @@ s_min:
 	addi s1, a4, 0 # armazena a posicao do menor elemento em s1
 	
 	lw t3, 0(a4) # coloca o primeiro elemento da lista em t3
-	add s2, zero, t3 # define o primeiro numero como valor minimo e o coloca em s2
+	add s2, zero, t3 # define o primeiro elemento como valor minimo e o coloca em s2
 s_min_loop:
-	bge t2, t1, s_min_end # desvia se t2 (contador dos numeros verificados) for maior ou igual a t1 (contador da quantidade de elementos a verificar)
+	bge t2, t1, s_switch # desvia se t2 (contador dos numeros verificados) for maior ou igual a t1 (contador da quantidade de elementos a verificar)
 	
 	addi a4, a4, 4 # vai para o proximo valor de a1 (adicionando 4)
-	lw t3, 0(a4) # coloca o proximo elemento da lista em s0
+	lw t3, 0(a4) # coloca o proximo elemento da lista em t3
 	
 	addi t2, t2, 1 # incrementa o contador de numeros verificados
 	
@@ -318,10 +318,9 @@ s_min_loop:
 	addi s1, a4, 0 # guarda a posicao atual da ordenacao em s1
 	
 	j s_min_loop # desvia para {s_min_loop}
-s_min_end:
-	add t4, zero, s2 # coloca em t4 o conteudo de s2 (menor elemento da lista) 
-	add a0, t4, zero # coloca em a0 o conteudo de t4 (menor elemento da lista)
 s_switch:
+	add a0, s2, zero # coloca em a0 o conteudo de s2 (menor elemento da lista)
+
 	lw t5, 0(s0) # armazena o valor no endereço de s0 (numero a ser trocado com o menor) em t5
 	lw t6, 0(s1) # armazena o valor no endereco de s1 (numero a ser trocado com o da posicao atual) em t6
 	
@@ -338,10 +337,12 @@ s_switch:
 	j s_loop # desvia para {s_loop}
 s_end:
 	ret # retorna
+
+# funcao det -> calcula a determinante da matriz
+
+det:
 	
-	
-	
-	
+
 determinante:
 	la s0, wrd_determinante
 	addi s1, zero, 0
