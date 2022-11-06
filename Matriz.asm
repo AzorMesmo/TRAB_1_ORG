@@ -1,7 +1,7 @@
 # PADRAO DOS REGISTRADORES
 
 # a0 = INPUTS
-# a2 = TAMANHO DAS LINHAS/CULUNAS DA MATRIZ
+# a1 = TAMANHO DAS LINHAS/CULUNAS DA MATRIZ
 # a3 = QUANTIDADE DE ELEMENTOS DA MATRIZ
 # a4 = MATRIZ QUANDO EM FUNÇÕES
 # a7 = CHAMADAS DOS SISTEMAS
@@ -136,7 +136,7 @@ input:
 	mul a3, a0, a0 # faz o tamanho da matriz ao quadrado para obter o numero de elementos e coloca esse valor em a3
 	addi t0, a3, 0 # coloca o valor de a3 em t0 (contador dos numeros a serem lidos)
 	
-	mv a1, a0 # move a0 (quantidade de elementos por linha) para a2
+	mv a1, a0 # move a0 (quantidade de elementos por linha/coluna) para a1
 	
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	la a0, str_break # coloca o {str_break} em a0
@@ -161,14 +161,14 @@ i_end:
 # funcao print -> imprimi a matriz
 
 print:
-	addi a4, a0, 0
+	addi a4, a0, 0 # coloca o valor de a0 (endereço incial da matriz) em a4
 	addi t0, a3, 0 # contador do tamanho da matriz (t0 recebe o numero de elementos da matriz)
 	addi t1, a1, 0 # contador das quebras de linha (t1 recebe o tamanho da linha da matriz)
 p_loop:
 	beq t1, zero, p_break # desvia se t1 (contador das quebras de linha) for igual a 0
 	bge zero, t0, p_end # desvia se t0 (contador do tamanho da matriz) for menor ou igual a 0 ("maior que" invertido)
 	
-	lw a0, 0(a4) # coloca em a0 o conteudo de a1 (o primeiro elemento da lista) 
+	lw a0, 0(a4) # coloca em a0 o conteudo de a4 (o primeiro elemento da lista) 
 	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
@@ -176,7 +176,7 @@ p_loop:
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
-	addi a4, a4, 4 # vai para o proximo valor de a1 (adicionando 4)
+	addi a4, a4, 4 # vai para o proximo valor de a4 (adicionando 4)
 	
 	addi t0, t0, -1 # decrementa o contador do tamanho da matriz
 	addi t1, t1, -1 # decrementa o contador das quebras de linha
