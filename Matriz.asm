@@ -38,10 +38,16 @@ main:
 	call input # chama a funcao {input}
 	call reset # chama a funcao {reset}
 	call break # chama a funcao {break}
-	call print # chama a funcao {print}
+#	call print # chama a funcao {print}
+#	call reset # chama a funcao {reset}
+#	call break # chama a funcao {break}
+	call max # chama a funcao {max}
 	call reset # chama a funcao {reset}
 	call break # chama a funcao {break}
-	call max # chama a funcao {max}
+	call ordena_matriz
+	call reset # chama a funcao {reset}
+	call break # chama a funcao {break}
+	call print # chama a funcao {print}
 	call end # chama a funcao {end}
 
 # funcao reset -> retorna o ponteiro da matriz para o inicio
@@ -185,8 +191,70 @@ m_end:
 	
 	ret # retorna
 	
-# funcao end -> encerra o programa
+	
+ordena_matriz: #ARRUMAR COMENTÁRIOS E REGISTRADORES USADOS, ESTÁ TUDO BAGUNÇADO?????????????
+	addi t6, a1, 0 #posicao atual da ordenacao
+	addi s1, zero, 0 #contador de numeros ordenados
+	addi s6, a3, 0
+	
+ordena_loop:
+	bge s1, a3, ordena_end # desvia se s1 (contador dos numeros ordenados) for maior ou igual a a3 (quantidade de elementos no vetor)
+	addi s1, s1, 1 #incrementa contador de numeros ordenados
+	
+encontra_min: #retorna min em s2 e sua posicao em t1
+	addi t0, zero, 1 # contador de numeros verificados (comeca em 1 porque antes de entrar no loop verificaremos um numero)
+	
+	addi t1, a1, 0 # armazena a posicao do menor elemento
+	
+	lw s0, 0(a1) # coloca o primeiro elemento da lista em s0
+	add t3, zero, s0 # define o primeiro numero como valor minimo e o coloca em t3
+	
+min_loop:
+	bge t0, s6, min_end # desvia se t0 (contador dos numeros verificados) for maior ou igual a a3 (quantidade de elementos no vetor)
+	
+	addi a1, a1, 4 # vai para o proximo valor de a1 (adicionando 4)
+	lw s0, 0(a1) # coloca o proximo elemento da lista em s0
+	
+	addi t0, t0, 1 # incrementa o contador de numeros verificados
+	
+	#addi t2, t2, 1 # incrementa o valor da posicao atual em 1
+	
+	bge s0, t3, min_loop # desvia se t3 (valor minimo armazenado) for menor que s0 (valor lido)
 
+	mv t3, s0 #move o valor de s0 (valor atual) para t3 (menor elemento)
+	addi t1, a1, 0 #posicao atual da ordenacao
+	#mv t1, t2 # move o valor de t2 (posicao do elemento atual) para t1 (posicao do menor elemento)
+	
+	j min_loop # desvia para {m_loop}
+min_end:
+	add s2, zero, t3 # coloca em s2 o conteudo de t3 (o menor elemento da lista) 
+	add a0, s2, zero
+	
+troca_valores: #t1 = posicao do menor elemento, #t6 = posicao atual da ordenacao
+	lw s3, 0(t6) #numero a trocar com o menor
+	lw s4, 0(t1) #numero a trocar com o da posicao atual
+	
+	addi a1, t1, 0
+	sw s3, 0(a1) #coloca o valor atual na posicao do menor
+	
+	addi a1, t6, 0
+	sw s4, 0(a1) #coloca o menor na posicao atual
+	
+#	addi t6, a1, 4
+	
+	
+	addi a1, a1, 4
+	addi t6, a1, 0
+	addi s6, s6, -1
+	
+	j ordena_loop
+
+
+ordena_end:
+	ret
+
+	
+# função end -> encerra o programa
 end:
 	li a7, 10 # coloca o valor 10 em a7 (10 = finalizar programa)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)	
