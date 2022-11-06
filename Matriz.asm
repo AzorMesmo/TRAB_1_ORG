@@ -34,6 +34,8 @@ str_line:
 	.string "Line: "
 str_column:
 	.string "Column: "
+str_sorted:
+	.string "\nMatrix Sorted!\n"
 str_menu:
 	.string "1- Input\n2- Print\n3- Max\n4- Ordena\n5- Determinante\n0- Sair\n"
 str_option:
@@ -282,6 +284,7 @@ m_end:
 	
 	ret # retorna
 	
+# funcao sort -> ordena a matriz em ordem crescente
 	
 ordena_matriz: #ARRUMAR COMENTÁRIOS E REGISTRADORES USADOS, ESTÁ TUDO BAGUNÇADO?????????????
 	addi a4, a0, 0
