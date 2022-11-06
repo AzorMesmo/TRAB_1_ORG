@@ -144,7 +144,7 @@ p_end:
 	
 # funcao max -> acha o maior valor da matriz
 	
-max:
+max: #ARRUMAR PARA RETORNAR LINHA + 1 E COLUNA + 1, E RETORNAR NOS REGISTRADORES CERTOS
 	addi t0, zero, 1 # contador de numeros verificados (comeca em 1 porque antes de entrar no loop verificaremos um numero)
 	
 	addi t2, zero, 0 # armazena a linha do maior elemento (comeca em 0)
@@ -160,21 +160,24 @@ m_loop:
 	addi a1, a1, 4 # vai para o proximo valor de a1 (adicionando 4)
 	lw s0, 0(a1) # coloca o proximo elemento da lista em s0
 	
-	addi t0, t0, 1 # decrementa o contador de numeros verificados
-	addi t4, t4, 1 # incrementa o valor da linha atual em 1
+	addi t0, t0, 1 # incrementa o contador de numeros verificados
 	addi t5, t5, 1 # incrementa o valor da coluna atual em 1
 	
-	blt s0, t6, m_loop # desvia se s0 (numero lido) for menor que t6 (valor maximo armazenado)
-	
+	blt s0, t6, verifica_c # desvia se s0 (numero lido) for menor que t6 (valor maximo armazenado)
 	mv t6, s0 # move o valor de s0 (numero lido) para t6 (valor maximo armazenado)
 	mv t2, t4 # move o valor de t4 (linha do elemento atual) para t2 (linha do maior elemento)
 	mv t3, t5 # move o valor de t5 (coluna do elemento atual) para t3 (coluna do maior elemento)
+	
+verifica_c:
+	blt t5, a2, m_loop
+	add t5, zero, zero
+	addi t4, t4, 1 # incrementa o valor da linha atual em 1
 	
 	j m_loop # desvia para {m_loop}
 m_end:
 	la a0, str_max # coloca o {str_max} em a0
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a
 	
 	add a0, zero, t6 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
 	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
