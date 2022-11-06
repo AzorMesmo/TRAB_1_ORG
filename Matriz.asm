@@ -2,12 +2,17 @@
 
 # a0 = INPUTS
 # a7 = CHAMADAS DOS SISTEMAS
+# a1 = LISTA DOS VALORES DA MATRIZ
 	
 # a2 = TAMANHO DAS LINHAS DA MATRIZ
 # a3 = QUANTIDADE DE ELEMENTOS DA MATRIZ
 
 # t0 = CONTADOR UM
 # t1 = CONTADOR DOIS
+
+# REGRAS DE CONSTANCIA
+
+# TODAS AS FUNCOES DEVEM TERMINAR COM O PONTEIRO DE a1 NO ULTIMO ELEMENTO PARA QUE A FUNCAO reset FUNCIONE CORRETAMENTE
 
 	.data
 
@@ -49,9 +54,9 @@ main:
 	call input # chama a funcao {input}
 	call reset # chama a funcao {reset}
 	call break # chama a funcao {break}
-	# call max # chama a funcao {max}
-	# call reset # chama a funcao {reset}
-	# call break # chama a funcao {break}
+	call max # chama a funcao {max}
+	call reset # chama a funcao {reset}
+	call break # chama a funcao {break}
 	# call ordena_matriz
 	# call reset # chama a funcao {reset}
 	# call break # chama a funcao {break}
@@ -137,10 +142,6 @@ break:
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
-	la a0, str_break # coloca o {str_break} em a0
-	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
 	ret # retorna
 	
 # funcao input -> le os valores da matriz
@@ -165,6 +166,7 @@ input:
 	
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	la a0, str_break # coloca o {str_break} em a0
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 i_loop:
 	bge zero, t0, i_end # desvia se t0 (contador dos numeros a serem lidos) for menor ou igual a 0 ("maior ou igual" invertido)
 	
@@ -250,6 +252,8 @@ m_next:
 	
 	j m_loop # desvia para {m_loop}
 m_end:
+	addi a1, a1, 4 # vai para o proximo valor de a1 (adicionando 4)
+	
 	la a0, str_max # coloca o {str_max} em a0
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a
@@ -280,6 +284,10 @@ m_end:
 	
 	add a0, zero, t5 # coloca em a0 o conteudo de t5 (coluna do maior elemento da lista) 
 	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+	
+	la a0, str_break # coloca {str_break} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
 	ret # retorna
