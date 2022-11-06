@@ -30,6 +30,10 @@ str_size:
 	.string "Size: "
 str_max:  
 	.string "Max: "
+str_line:
+	.string "Line: "
+str_column:
+	.string "Column: "
 str_menu:
 	.string "1- Input\n2- Print\n3- Max\n4- Ordena\n5- Determinante\n0- Sair\n"
 str_option:
@@ -140,6 +144,7 @@ input:
 	
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	la a0, str_break # coloca o {str_break} em a0
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 i_loop:
 	bge zero, t0, i_end # desvia se t0 (contador dos numeros a serem lidos) for menor ou igual a 0 ("maior ou igual" invertido)
 	
@@ -156,6 +161,10 @@ i_loop:
 	addi t0, t0, -1 # decrementa o contador
 	j i_loop # desvia para {i_loop}
 i_end:
+	la a0, str_break # coloca o {str_break} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+
 	ret # retorna
 							
 # funcao print -> imprimi a matriz
@@ -183,7 +192,7 @@ p_loop:
 
 	j p_loop # desvia para {p_loop}
 p_break:
-	la a0, str_break # coloca {str_break} em a0
+	la a0, str_break # coloca o {str_break} em a0
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
@@ -191,18 +200,22 @@ p_break:
 	
 	j p_loop # desvia para {p_loop}
 p_end:
+	la a0, str_break # coloca {str_break} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+
 	ret # retorna
 	
 # funcao max -> acha o maior valor da matriz
 	
 max: #ARRUMAR PARA RETORNAR LINHA + 1 E COLUNA + 1, E RETORNAR NOS REGISTRADORES CERTOS
-	addi a4, a0, 0
+	addi a4, a0, 0 # coloca o valor de a0 (endereço incial da matriz) em a4
 	addi t0, zero, 1 # contador de numeros verificados (comeca em 1 porque antes de entrar no loop verificaremos um numero)
 	
-	addi t2, zero, 0 # armazena a linha do maior elemento (comeca em 0)
-	addi t3, zero, 0 # armazena a coluna do maior elemento (comeca em 0)
-	addi t4, zero, 0 # armazena a linha do elemento atual (comeca em 0)
-	addi t5, zero, 0 # armazena a coluna do elemento atual (comeca em 0)
+	addi t2, zero, 1 # armazena a linha do maior elemento (comeca em 1)
+	addi t3, zero, 1 # armazena a coluna do maior elemento (comeca em 1)
+	addi t4, zero, 1 # armazena a linha do elemento atual (comeca em 1)
+	addi t5, zero, 1 # armazena a coluna do elemento atual (comeca em 1)
 	
 	lw s0, 0(a4) # coloca o primeiro elemento da lista em s0
 	add t6, zero, s0 # define o primeiro numero como valor maximo e o coloca em t6
@@ -215,14 +228,14 @@ m_loop:
 	addi t0, t0, 1 # incrementa o contador de numeros verificados
 	addi t5, t5, 1 # incrementa o valor da coluna atual em 1
 	
-	blt s0, t6, verifica_c # desvia se s0 (numero lido) for menor que t6 (valor maximo armazenado)
+	blt s0, t6, m_next # desvia se s0 (numero lido) for menor que t6 (valor maximo armazenado)
 	mv t6, s0 # move o valor de s0 (numero lido) para t6 (valor maximo armazenado)
 	mv t2, t4 # move o valor de t4 (linha do elemento atual) para t2 (linha do maior elemento)
 	mv t3, t5 # move o valor de t5 (coluna do elemento atual) para t3 (coluna do maior elemento)
 	
-verifica_c:
-	blt t5, a1, m_loop
-	add t5, zero, zero
+m_next:
+	blt t5, a1, m_loop # desvia se t5 (coluna do elemento atual) for menor que a1 (quantidade de elementos por linha)
+	add t5, zero, zero # reinicia o contador
 	addi t4, t4, 1 # incrementa o valor da linha atual em 1
 	
 	j m_loop # desvia para {m_loop}
@@ -233,6 +246,38 @@ m_end:
 	
 	add a0, zero, t6 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
 	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+	
+	la a0, str_break # coloca o {str_break} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+	
+	la a0, str_line # coloca o {str_line} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a
+	
+	add a0, zero, t2 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
+	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+	
+	la a0, str_break # coloca o {str_break} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+	
+	la a0, str_column # coloca o {str_column} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a
+	
+	add a0, zero, t3 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
+	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+	
+	la a0, str_break # coloca o {str_break} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+	
+	la a0, str_break # coloca {str_break} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
 	ret # retorna
