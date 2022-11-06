@@ -28,6 +28,12 @@ str_size:
 	.string "Size: "
 str_max:  
 	.string "Max: "
+str_menu:
+	.string "1- Input\n2- Print\n3- Max\n4- Ordena\n5- Determinante\n6- Sair\n"
+str_option:
+	.string "Option: "
+str_else:
+	.string "This option is not available!\n"
 
 	.text
 	
@@ -50,8 +56,64 @@ main:
 	call print # chama a funcao {print}
 	call end # chama a funcao {end}
 
-# funcao reset -> retorna o ponteiro da matriz para o inicio
+#loop_main:
+#	addi s1, zero, 1
+#	addi s2, zero, 2
+#	addi s3, zero, 3 #confere option
+#	addi s4, zero, 4
+#	addi s5, zero, 5
+#	addi s6, zero, 6
 	
+#	la a0, str_menu #imprime menu de opcoes de operacoes
+#	li a7, 4
+#	ecall
+	
+#	la a0, str_option #imprime "Option: "
+#	li a7, 4
+#	ecall
+	
+#	li a7, 5 #lê option
+#	ecall
+	
+#	mv s0, a0 #move a option para s0
+	
+#	beq s0, s6, end #se option == 6, encerra programa
+
+#if_option1:
+#	bne s0, s1, if_option2
+#	call input # chama a funcao {input}
+#	call reset
+#	call break
+#if_option2:
+#	bne s0, s2, if_option3
+#	call print # chama a funcao {print}
+#	call reset
+#	call break
+#if_option3:
+#	bne s0, s3, if_option4
+#	call max # chama a funcao {max}
+#	call reset
+#	call break
+#if_option4:
+#	bne s0, s4, if_option5
+#	call ordena_matriz # chama a funcao {ordena_matriz}
+#	call reset
+#	lw a0, 0(a1)
+#	li a7, 1
+#	ecall
+#	call break
+#if_option5:
+#	bne s0, s5, else
+	#call determinante # chama a funcao {determinante}
+	#call reset
+	#call break
+#else:
+#	la a0, str_else
+#	li a7, 4
+#	j loop_main
+	
+# funcao reset -> retorna o ponteiro da matriz para o inicio
+
 reset:
 	addi t0, a3, 0 # coloca em t0 (contador do retorno do ponteiro) o tamanho da matriz
 	
