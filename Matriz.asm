@@ -1,11 +1,10 @@
 # PADRAO DOS REGISTRADORES
 
 # a0 = INPUTS
+# a2 = TAMANHO DAS LINHAS/CULUNAS DA MATRIZ
+# a3 = QUANTIDADE DE ELEMENTOS DA MATRIZ
 # a4 = MATRIZ QUANDO EM FUNÇÕES
 # a7 = CHAMADAS DOS SISTEMAS
-	
-# a2 = TAMANHO DAS LINHAS DA MATRIZ
-# a3 = QUANTIDADE DE ELEMENTOS DA MATRIZ
 
 # t0 = CONTADOR UM
 # t1 = CONTADOR DOIS
@@ -13,7 +12,7 @@
 	.data
 
 wrd_numbers:
-	.word	0, 1, 0, 0, 0, 0,
+	.word	0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0,
@@ -120,7 +119,8 @@ reset:
 # funcao input -> le os valores da matriz
 	
 input:
-	addi a4, a0, 0
+	addi a4, a0, 0 # coloca o valor de a0 (endereço incial da matriz) em a4
+	
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	la a0, str_size # coloca o {str_size} em a0
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
