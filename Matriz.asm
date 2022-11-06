@@ -157,8 +157,8 @@ i_loop:
 	li a7, 5 # coloca o valor 5 em a7 (5 = ler inteiro)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
-	sw a0, 0(a4) # move o valor de a0 para a1
-	addi a4, a4, 4 # vai para o proximo valor de a1 (adicionando 4)
+	sw a0, 0(a4) # move o valor de a0 para a4
+	addi a4, a4, 4 # vai para o proximo valor de a4 (adicionando 4)
 	
 	addi t0, t0, -1 # decrementa o contador
 	j i_loop # desvia para {i_loop}
@@ -212,12 +212,12 @@ p_end:
 	
 max:
 	addi a4, a0, 0 # coloca o valor de a0 (endereço incial da matriz) em a4
-	addi t0, zero, 1 # contador de numeros verificados (comeca em 1 porque antes de entrar no loop verificaremos um numero)
+	addi t0, zero, 1 # contador de numeros verificados (comeca em 1 porque antes de entrar no loop verificamos um numero)
 	
-	addi a1, zero, 1 # armazena a linha do maior elemento (comeca em 1)
-	addi a2, zero, 1 # armazena a coluna do maior elemento (comeca em 1)
-	addi t2, zero, 1 # armazena a linha do elemento atual (comeca em 1)
-	addi t3, zero, 1 # armazena a coluna do elemento atual (comeca em 1)
+	addi t2, zero, 1 # armazena a linha do maior elemento (comeca em 1)
+	addi t3, zero, 1 # armazena a coluna do maior elemento (comeca em 1)
+	addi t4, zero, 1 # armazena a linha do elemento atual (comeca em 1)
+	addi t5, zero, 1 # armazena a coluna do elemento atual (comeca em 1)
 	
 	lw s0, 0(a4) # coloca o primeiro elemento da lista em s0
 	add t6, zero, s0 # define o primeiro numero como valor maximo e o coloca em t6
@@ -228,17 +228,16 @@ m_loop:
 	lw s0, 0(a4) # coloca o proximo elemento da lista em s0
 	
 	addi t0, t0, 1 # incrementa o contador de numeros verificados
-	addi t3, t3, 1 # incrementa o valor da coluna atual em 1
+	addi t5, t5, 1 # incrementa o valor da coluna atual em 1
 	
 	blt s0, t6, m_next # desvia se s0 (numero lido) for menor que t6 (valor maximo armazenado)
 	mv t6, s0 # move o valor de s0 (numero lido) para t6 (valor maximo armazenado)
-	mv a1, t2 # move o valor de t4 (linha do elemento atual) para t2 (linha do maior elemento)
-	mv a2, t3 # move o valor de t5 (coluna do elemento atual) para t3 (coluna do maior elemento)
-	
+	mv t2, t4 # move o valor de t4 (linha do elemento atual) para t2 (linha do maior elemento)
+	mv t3, t5 # move o valor de t5 (coluna do elemento atual) para t3 (coluna do maior elemento)
 m_next:
-	blt t3, a1, m_loop # desvia se t5 (coluna do elemento atual) for menor que a1 (quantidade de elementos por linha)
-	add t3, zero, zero # reinicia o contador
-	addi t2, t2, 1 # incrementa o valor da linha atual em 1
+	blt t5, a1, m_loop # desvia se t5 (coluna do elemento atual) for menor que a1 (quantidade de elementos por linha)
+	addi t5, zero, 0 # reinicia o contador
+	addi t4, t4, 1 # incrementa o valor da linha atual em 1
 	
 	j m_loop # desvia para {m_loop}
 m_end:
@@ -258,7 +257,7 @@ m_end:
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a
 	
-	add a0, zero, a1 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
+	add a0, zero, t2 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
 	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
@@ -270,7 +269,7 @@ m_end:
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a
 	
-	add a0, zero, a2 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
+	add a0, zero, t3 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
 	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
@@ -289,7 +288,7 @@ m_end:
 sort:
 	addi a4, a0, 0 # coloca o valor de a0 (endereço incial da matriz) em a4
 	
-	addi s0, a0, 0 # coloca em s0 onumero na posicao atual da ordenacao (posicao 0 de a0)
+	addi s0, a0, 0 # coloca em s0 o numero na posicao atual
 	
 	addi t0, zero, 0 # contador de numeros ordenados
 	addi t1, a3, 0 # contador da quantidade de elementos a verificar
@@ -307,7 +306,7 @@ s_min:
 s_min_loop:
 	bge t2, t1, s_switch # desvia se t2 (contador dos numeros verificados) for maior ou igual a t1 (contador da quantidade de elementos a verificar)
 	
-	addi a4, a4, 4 # vai para o proximo valor de a1 (adicionando 4)
+	addi a4, a4, 4 # vai para o proximo valor de a4 (adicionando 4)
 	lw t3, 0(a4) # coloca o proximo elemento da lista em t3
 	
 	addi t2, t2, 1 # incrementa o contador de numeros verificados
@@ -324,18 +323,23 @@ s_switch:
 	lw t5, 0(s0) # armazena o valor no endereço de s0 (numero a ser trocado com o menor) em t5
 	lw t6, 0(s1) # armazena o valor no endereco de s1 (numero a ser trocado com o da posicao atual) em t6
 	
-	addi a4, s1, 0 # coloca o ponteiro de a4 na endereco de s1 (numero a ser trocado com o da posicao atual)
+	addi a4, s1, 0 # coloca em a4 o valor de s1 (posicao do numero a ser trocado com o da posicao atual)
 	sw t5, 0(a4) # coloca o valor de t5 na posicao de a4 (valor atual na posicao do menor)
 	
-	addi a4, s0, 0 # coloca o ponteiro de a4 na endereco de s1 (numero a ser trocado com o menor)
-	sw t6, 0(a4) # coloca o valor de t6 na posicao de a4 (valor atual na posicao do menor)
+	addi a4, s0, 0 # coloca em a4 o valor de s0 (posicao do numero a ser trocado com o menor)
+	sw t6, 0(a4) # coloca o valor de t6 na posicao de a4 (antigo valor menor na posicao do atual)
 	
 	addi a4, a4, 4 # vai para o proximo valor de a4 (adicionando 4)
 	addi s0, a4, 0 # reinicia a posicao atual da ordenacao (comeca um valor a frente pois ja achamos o menor valor)
 	addi t1, t1, -1 # decrementa o contador da quantidade de elementos a verificar
+	# addi t0, t0, 1 # incrementa contador de numeros ordenados
 	
 	j s_loop # desvia para {s_loop}
 s_end:
+	la a0, str_sorted # coloca o {str_number} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+
 	ret # retorna
 
 # funcao det -> calcula a determinante da matriz
