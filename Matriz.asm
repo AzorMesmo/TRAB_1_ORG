@@ -3,13 +3,13 @@
 # a0 = INPUTS
 # a4 = MATRIZ QUANDO EM FUNÇÕES
 # a7 = CHAMADAS DOS SISTEMAS
+# s8 = ENDEREÇO DO INICIO DA MATRIZ
 	
 # a2 = TAMANHO DAS LINHAS DA MATRIZ
 # a3 = QUANTIDADE DE ELEMENTOS DA MATRIZ
 
 # t0 = CONTADOR UM
 # t1 = CONTADOR DOIS
-
 
 	.data
 
@@ -21,7 +21,7 @@ wrd_numbers:
 		0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0
 wrd_determinante:
-	.word   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	.word   0, 0, 0, 0, 0, 0, 0, 0, 0
 str_space:
 	.string	" "
 str_break:
@@ -33,77 +33,79 @@ str_size:
 str_max:  
 	.string "Max: "
 str_menu:
-	.string "1- Input\n2- Print\n3- Max\n4- Ordena\n5- Determinante\n6- Sair\n"
+	.string "1 - Input\n2 - Print\n3 - Max\n4 - Sort\n5 - Determinant\n0 - Exit\n"
 str_option:
 	.string "Option: "
-str_else:
+str_invalid:
 	.string "This option is not available!\n"
 
 	.text
 	
-# funcao main -> inicio do programa
+# funcao main -> menu de opcoes
 	
 main:
 	la a0, wrd_numbers # coloca o {wrd_numbers} em a1
-	addi a1, zero, 6
-	addi s8, a0, 0
+	addi a1, zero, 6 # coloca o valor 6 em a1
+	addi s8, a0, 0 # coloca o a posicao inicial da lista de elementos da matriz em s8
 
-loop_main:
-	call break
+main_loop:
+	addi s1, zero, 1 # define o valor 1 em s1 (opcao 1)
+	addi s2, zero, 2 # define o valor 2 em s1 (opcao 2)
+	addi s3, zero, 3 # define o valor 3 em s1 (opcao 3)
+	addi s4, zero, 4 # define o valor 4 em s1 (opcao 4)
+	addi s5, zero, 5 # define o valor 5 em s1 (opcao 5)
+	addi s6, zero, 0 # define o valor 0 em s1 (opcao 6)
 	
-	addi s1, zero, 1
-	addi s2, zero, 2
-	addi s3, zero, 3 #confere option
-	addi s4, zero, 4
-	addi s5, zero, 5
-	addi s6, zero, 6
+	la a0, str_menu # coloca o {str_menu} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
-	la a0, str_menu #imprime menu de opcoes de operacoes
-	li a7, 4
-	ecall
+	la a0, str_option # coloca o {str_option} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
-	la a0, str_option #imprime "Option: "
-	li a7, 4
-	ecall
+	li a7, 5 # coloca o valor 5 em a7 (5 = ler inteiro)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
-	li a7, 5 #lê option
-	ecall
+	mv s0, a0 # move o valor da opcao escolhida para s0
 	
-	mv s0, a0 #move a option para s0
-	
-	call reset #a0 volta a ter a lista
-	
-	beq s0, s6, end #se option == 6, encerra programa
+	call reset # chama a funcao {reset}
+	call break # chama a funcao {break}
 
-	if_option1:
-		bne s0, s1, if_option2
+	main_exit:
+		bne s0, zero, main_input # desvia se s0 for diferente de 0
+		call end # chama a funcao {end}
+	main_input:
+		bne s0, s1, main_print # desvia se s0 for diferente de s1
 		call input # chama a funcao {input}
-		j loop_main
-	if_option2:
-		bne s0, s2, if_option3
+		j main_loop # desvia para {main_loop}
+	main_print:
+		bne s0, s2, main_max # desvia se s0 for diferente de s2
 		call print # chama a funcao {print}
-		j loop_main
-	if_option3:
-		bne s0, s3, if_option4
+		j main_loop # desvia para {main_loop}
+	main_max:
+		bne s0, s3, if_option4 # desvia se s0 for diferente de s3
 		call max # chama a funcao {max}
-		j loop_main
-	if_option4:
-		bne s0, s4, if_option5
-		call ordena_matriz # chama a funcao {ordena_matriz}
-		j loop_main
-	if_option5:
-		bne s0, s5, else
-		call determinante # chama a funcao {determinante}
-		j loop_main
-	else:
-		la a0, str_else
-		li a7, 4
-		j loop_main
+		j main_loop # desvia para {main_loop}
+	main_sort:
+		bne s0, s4, if_option5 # desvia se s0 for diferente de s4
+		call sort # chama a funcao {sort}
+		j main_loop # desvia para {main_loop}
+	main_determinant:
+		bne s0, s5, else # desvia se s0 for diferente de s5
+		call determinant # chama a funcao {determinant}
+		j main_loop # desvia para {main_loop}
+	main_invalid:
+		la a0, str_invalid # coloca o {str_invalid} em a0
+		li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+		ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+		
+		j main_loop # desvia para {main_loop}
 	
 # funcao reset -> retorna o ponteiro da matriz para o inicio
 
 reset:
-	addi a0, s8, 0
+	addi a0, s8, 0 # coloca o endereco do inicio da matriz em a0
 	ret # retorna
 	
 # funcao break -> imprime uma quebra de linha
@@ -417,6 +419,7 @@ end_determinante:
 
 	
 # função end -> encerra o programa
+
 end:
 	li a7, 10 # coloca o valor 10 em a7 (10 = finalizar programa)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)	
