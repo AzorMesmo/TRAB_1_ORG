@@ -247,7 +247,7 @@ m_loop:
 	mv t3, t5 # move o valor de t5 (coluna do elemento atual) para t3 (coluna do maior elemento)	
 m_next:
 	blt t5, a2, m_loop # desvia se t5 (coluna do elemento atual) for menor que a2 (quantidade de elementos por linha)
-	addi t5, zero, 1 # reinicia o valor da coluna atual
+	addi t5, zero, 0 # reinicia o valor da coluna atual (0 porque será incrementado depois)
 	addi t4, t4, 1 # incrementa o valor da linha atual em 1
 	
 	j m_loop # desvia para {m_loop}
@@ -270,7 +270,7 @@ m_end:
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a
 	
-	add a0, zero, t4 # coloca em a0 o conteudo de t4 (linha do maior elemento da lista) 
+	add a0, zero, t2 # coloca em a0 o conteudo de t4 (linha do maior elemento da lista) 
 	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
@@ -282,7 +282,7 @@ m_end:
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a
 	
-	add a0, zero, t5 # coloca em a0 o conteudo de t5 (coluna do maior elemento da lista) 
+	add a0, zero, t3 # coloca em a0 o conteudo de t5 (coluna do maior elemento da lista) 
 	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
