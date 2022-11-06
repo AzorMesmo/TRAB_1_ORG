@@ -47,79 +47,58 @@ main:
 	la a0, wrd_numbers # coloca o {wrd_numbers} em a1
 	addi a1, zero, 6
 	addi s8, a0, 0
-	call input # chama a funcao {input}
-	call break # chama a funcao {break}
-	call reset # chama a funcao {reset}
-#	call determinante
-#	call print # chama a funcao {print}
-#	call reset # chama a funcao {reset}
-#	call break # chama a funcao {break}
-	call max # chama a funcao {max}
-	call break # chama a funcao {break}
-	call reset # chama a funcao {reset}
-	call ordena_matriz
-	call break # chama a funcao {break}
-	call reset # chama a funcao {reset}
-#	call reset # chama a funcao {reset}
-#	call break # chama a funcao {break}
-	call print # chama a funcao {print}
-	call end # chama a funcao {end}
 
-#loop_main:
-#	addi s1, zero, 1
-#	addi s2, zero, 2
-#	addi s3, zero, 3 #confere option
-#	addi s4, zero, 4
-#	addi s5, zero, 5
-#	addi s6, zero, 6
+loop_main:
+	call break
 	
-#	la a0, str_menu #imprime menu de opcoes de operacoes
-#	li a7, 4
-#	ecall
+	addi s1, zero, 1
+	addi s2, zero, 2
+	addi s3, zero, 3 #confere option
+	addi s4, zero, 4
+	addi s5, zero, 5
+	addi s6, zero, 6
 	
-#	la a0, str_option #imprime "Option: "
-#	li a7, 4
-#	ecall
+	la a0, str_menu #imprime menu de opcoes de operacoes
+	li a7, 4
+	ecall
 	
-#	li a7, 5 #lê option
-#	ecall
+	la a0, str_option #imprime "Option: "
+	li a7, 4
+	ecall
 	
-#	mv s0, a0 #move a option para s0
+	li a7, 5 #lê option
+	ecall
 	
-#	beq s0, s6, end #se option == 6, encerra programa
+	mv s0, a0 #move a option para s0
+	
+	call reset #a0 volta a ter a lista
+	
+	beq s0, s6, end #se option == 6, encerra programa
 
-#if_option1:
-#	bne s0, s1, if_option2
-#	call input # chama a funcao {input}
-#	call reset
-#	call break
-#if_option2:
-#	bne s0, s2, if_option3
-#	call print # chama a funcao {print}
-#	call reset
-#	call break
-#if_option3:
-#	bne s0, s3, if_option4
-#	call max # chama a funcao {max}
-#	call reset
-#	call break
-#if_option4:
-#	bne s0, s4, if_option5
-#	call ordena_matriz # chama a funcao {ordena_matriz}
-#	call reset
-#	lw a0, 0(a1)
-#	li a7, 1
-#	ecall
-#	call break
-#if_option5:
-#	bne s0, s5, else
-	#call determinante # chama a funcao {determinante}
-	#call reset
-	#call break
-#else:
-#	la a0, str_else
-#	li a7, 4
-#	j loop_main
+	if_option1:
+		bne s0, s1, if_option2
+		call input # chama a funcao {input}
+		j loop_main
+	if_option2:
+		bne s0, s2, if_option3
+		call print # chama a funcao {print}
+		j loop_main
+	if_option3:
+		bne s0, s3, if_option4
+		call max # chama a funcao {max}
+		j loop_main
+	if_option4:
+		bne s0, s4, if_option5
+		call ordena_matriz # chama a funcao {ordena_matriz}
+		j loop_main
+	if_option5:
+		bne s0, s5, else
+		call determinante # chama a funcao {determinante}
+		j loop_main
+	else:
+		la a0, str_else
+		li a7, 4
+		j loop_main
 	
 # funcao reset -> retorna o ponteiro da matriz para o inicio
 
