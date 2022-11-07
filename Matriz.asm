@@ -41,7 +41,7 @@ str_determinant:
 str_determinant_invalid:
 	.string "Must Be A 3x3 Matrix!\n"
 str_menu:
-	.string "1- Input\n2- Print\n3- Max\n4- Ordena\n5- Determinante\n0- Sair\n"
+	.string "1 - Input\n2 - Print\n3 - Max\n4 - Sort\n5 - Determinant\n0 - Exit\n"
 str_option:
 	.string "Option: "
 str_option_invalid:
@@ -56,6 +56,8 @@ main:
 	addi a1, zero, 6 # coloca o valor 6 em a1
 	addi s8, a0, 0 # guarda o inicio da matriz em s8
 main_loop:
+	call reset
+
 	addi s1, zero, 1 # coloca o valor 1 em s1 (opcao 1)
 	addi s2, zero, 2 # coloca o valor 2 em s2 (opcao 2)
 	addi s3, zero, 3 # coloca o valor 3 em s3 (opcao 3)
@@ -86,7 +88,7 @@ main_loop:
 	addi a0, s8, 0 # coloca em a0 o valor de s8 (inicio da matriz)
 
 	main_exit:
-		bne s0, zero, main_input # desvia se s0 igual a 0
+		beq s0, zero, main_input # desvia se s0 igual a 0
 		call end # chama a funcao {end}
 		j main_loop # desvia para {main_loop}
 	main_input:
@@ -349,8 +351,8 @@ s_end:
 # funcao det -> calcula a determinante da matriz
 
 det:
-	addi t0, zero, 3 # armazena o valor 3 em t0
-	bne a1, t0, d_invalid # desvia caso a1 (tamano das linhas/colunas da matriz) seja diferente de t0 (3)
+	addi t1, zero, 3 # armazena o valor 3 em t0
+	bne a1, t1, d_invalid # desvia caso a1 (tamano das linhas/colunas da matriz) seja diferente de t1 (3)
 	
 	addi s0, zero, 0 # coloca o valor 0 em s0 (primeira diagonal positiva)
 	addi s1, zero, 0 # coloca o valor 0 em s1 (segunda diagonal positiva)
@@ -367,117 +369,63 @@ det:
 	add s4, s4, t0 # coloca o primeiro elemento em s4 (segunda diagonal negativa)
 	
 	addi a4, a4, 4 # vai para o proximo valor de a4 (adicionando 4)
-	lw s0, 0(a4) # coloca o proximo elemento da lista em s0
+	lw t0, 0(a4) # coloca o proximo elemento da lista em s0
 	
 	# segundo elemento
 	add s1, s1, t0 # coloca o segundo elemento em s1 (segunda diagonal positiva)
 	add s5, s5, t0 # coloca o segundo elemento em s5 (terceira diagonal negativa)
 	
 	addi a4, a4, 4 # vai para o proximo valor de a4 (adicionando 4)
-	lw s0, 0(a4) # coloca o proximo elemento da lista em s0
+	lw t0, 0(a4) # coloca o proximo elemento da lista em s0
 	
 	# terceiro elemento
 	add s2, s2, t0 # coloca o terceiro elemento em s2 (terceira diagonal positiva)
 	add s3, s3, t0 # coloca o terceiro elemento em s3 (primeira diagonal negativa)
 	
 	addi a4, a4, 4 # vai para o proximo valor de a4 (adicionando 4)
-	lw s0, 0(a4) # coloca o proximo elemento da lista em s0
+	lw t0, 0(a4) # coloca o proximo elemento da lista em s0
 	
 	# quarto elemento
 	mul s2, s2, t0 # multiplica novo elemento pelos elementos em s2 (terceira diagonal positiva)
 	mul s5, s5, t0 # multiplica novo elemento pelos elementos em s5 (terceira diagonal negativa)
 	
 	addi a4, a4, 4 # vai para o proximo valor de a4 (adicionando 4)
-	lw s0, 0(a4) # coloca o proximo elemento da lista em s0
+	lw t0, 0(a4) # coloca o proximo elemento da lista em s0
 	
 	# quinto elemento
 	mul s0, s0, t0 # multiplica novo elemento pelos elementos em s0 (primeira diagonal positiva)
 	mul s3, s3, t0 # multiplica novo elemento pelos elementos em s3 (primeira diagonal negativa)
 	
 	addi a4, a4, 4 # vai para o proximo valor de a4 (adicionando 4)
-	lw s0, 0(a4) # coloca o proximo elemento da lista em s0
+	lw t0, 0(a4) # coloca o proximo elemento da lista em s0
 	
 	# sexto elemento
 	mul s1, s1, t0 # multiplica novo elemento pelos elementos em s1 (segunda diagonal positiva)
 	mul s4, s4, t0 # multiplica novo elemento pelos elementos em s4 (segunda diagonal negativa)
 	
 	addi a4, a4, 4 # vai para o proximo valor de a4 (adicionando 4)
-	lw s0, 0(a4) # coloca o proximo elemento da lista em s0
+	lw t0, 0(a4) # coloca o proximo elemento da lista em s0
 	
 	# setimo elemento
 	mul s1, s1, t0 # multiplica novo elemento pelos elementos em s1 (segunda diagonal positiva)
 	mul s3, s3, t0 # multiplica novo elemento pelos elementos em s3 (primeira diagonal negativa)
 	
 	addi a4, a4, 4 # vai para o proximo valor de a4 (adicionando 4)
-	lw s0, 0(a4) # coloca o proximo elemento da lista em s0
+	lw t0, 0(a4) # coloca o proximo elemento da lista em s0
 	
 	# oitavo elemento
 	mul s2, s2, t0 # multiplica novo elemento pelos elementos em s2 (terceira diagonal positiva)
 	mul s4, s4, t0 # multiplica novo elemento pelos elementos em s4 (segunda diagonal negativa)
 	
 	addi a4, a4, 4 # vai para o proximo valor de a4 (adicionando 4)
-	lw s0, 0(a4) # coloca o proximo elemento da lista em s0
+	lw t0, 0(a4) # coloca o proximo elemento da lista em s0
 
 	# nono elemento
 	mul s0, s0, t0 # multiplica novo elemento pelos elementos em s0 (primeira diagonal positiva)
 	mul s5, s5, t0 # multiplica novo elemento pelos elementos em s5 (terceira diagonal negativa)
 	
 	addi a4, a4, 4 # vai para o proximo valor de a4 (adicionando 4)
-	lw s0, 0(a4) # coloca o proximo elemento da lista em s0
-	
-	
-	la a0, str_break # coloca o {str_break} em a0
-	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
-	add a0, zero, s0 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
-	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
-	la a0, str_break # coloca o {str_break} em a0
-	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
-	add a0, zero, s1 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
-	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
-	la a0, str_break # coloca o {str_break} em a0
-	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
-	add a0, zero, s2 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
-	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
-	la a0, str_break # coloca o {str_break} em a0
-	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
-	add a0, zero, s3 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
-	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
-	la a0, str_break # coloca o {str_break} em a0
-	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
-	add a0, zero, s4 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
-	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
-	la a0, str_break # coloca o {str_break} em a0
-	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
-	add a0, zero, s5 # coloca em a0 o conteudo de t6 (o maior elemento da lista) 
-	li a7, 1 # coloca o valor 1 em a7 (1 = imprimir inteiro)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
-	la a0, str_break # coloca o {str_break} em a0
-	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
-	
+	lw t0, 0(a4) # coloca o proximo elemento da lista em s0
 	
 	# diagonais
 	add s6, s0, s1 # soma s0 (primeira diagonal positiva) e s1 (primeira diagonal positiva) e armazena em s6 (diagonais positivas)
@@ -505,135 +453,15 @@ d_end:
 	la a0, str_break # coloca o {str_break} em a0
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
+	
+	la a0, str_break # coloca o {str_break} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 
 	ret #retorna
 	
-
-determinante:
-	la s0, wrd_determinante
-	addi s1, zero, 0
-	addi t6, a1, 0
-	addi s7, s0, 0
-	
-loop1_determinante:
-	bge s1, a2, nextOnes_determinante
-	
-	addi s1, s1, 1
-	
-	lw a0, 0(a1)
-	sw a0, 0(s0)
-	
-	addi a1, a1, 16
-	addi s0, s0, 4
-	
-	
-	
-	j loop1_determinante
-
-nextOnes_determinante:
-	addi a1, t6, 4
-	lw a0, 0(a1)     
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, a1, 16
-	lw a0, 0(a1)     
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, a1, 4
-	lw a0, 0(a1)     
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, t6, 8
-	lw a0, 0(a1)     
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, a1, 4   
-	lw a0, 0(a1)     
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, a1, 16
-	lw a0, 0(a1)
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, t6, 4
-	lw a0, 0(a1)     
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, a1, 8
-	lw a0, 0(a1)     
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, a1, 20
-	lw a0, 0(a1)     
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, t6, 0
-	lw a0, 0(a1)     
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, a1, 20
-	lw a0, 0(a1)     
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, a1, 8
-	lw a0, 0(a1)     
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, t6, 8
-	lw a0, 0(a1)     
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, a1, 8
-	lw a0, 0(a1)
-	sw a0, 0(s0)
-	addi s0, s0, 4
-	addi a1, a1, 8
-	lw a0, 0(a1)
-	sw a0, 0(s0)
-	
-print_determinante:
-	addi t1, zero, 0
-	addi t2, zero, 18
-	addi s0, s7, 0
-loop_print_determinante:
-	bge t1, t2, end_determinante
-	
-	lw a0, 0(s0)
-	li a7, 1
-	ecall
-	
-	addi s0, s0, 4
-	
-	addi t1, t1, 1
-	j loop_print_determinante
-	
-loop_calcula_determinante:
-
-next_determinante:
-	addi s0, s7, 0
-	addi t1, zero, 1
-	addi s1, zero, 0
-	
-mul_determinante:
-	bge s1, a2, end_determinante
-	
-	lw a0, 0(s0)
-	
-	addi s0, s0, 4
-	addi s1, s1, 1
-	
-	mul t1, t1, a0 
-	
-	j mul_determinante
-	
-
-end_determinante:
-#	mv a0, t1
-	ret
-	
-
-	
 # função end -> encerra o programa
+
 end:
 	li a7, 10 # coloca o valor 10 em a7 (10 = finalizar programa)
-	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)	
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
