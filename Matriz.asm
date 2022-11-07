@@ -88,7 +88,7 @@ main_loop:
 	addi a0, s8, 0 # coloca em a0 o valor de s8 (inicio da matriz)
 
 	main_exit:
-		beq s0, zero, main_input # desvia se s0 igual a 0
+		bne s0, zero, main_input # desvia se s0 igual a 0
 		call end # chama a funcao {end}
 		j main_loop # desvia para {main_loop}
 	main_input:
