@@ -18,8 +18,6 @@ wrd_numbers:
 		0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0
-wrd_determinante:
-	.word   0, 0, 0, 0, 0, 0, 0, 0, 0
 str_space:
 	.string	" "
 str_break:
@@ -28,6 +26,8 @@ str_number:
 	.string "Number: "
 str_size:
 	.string "Size: "
+str_size_invalid:
+	.string "\nInvalid Size!\n"
 str_max:  
 	.string "Max: "
 str_line:
@@ -88,7 +88,7 @@ main_loop:
 	addi a0, s8, 0 # coloca em a0 o valor de s8 (inicio da matriz)
 
 	main_exit:
-		bne s0, zero, main_input # desvia se s0 igual a 0
+		bne s0, zero, main_input # desvia se s0 diferente de 0
 		call end # chama a funcao {end}
 		j main_loop # desvia para {main_loop}
 	main_input:
@@ -105,14 +105,14 @@ main_loop:
 		j main_loop # desvia para {main_loop}
 	main_sort:
 		bne s0, s4, main_det # desvia se s0 igual a s4
-		call sort # chama a funcao {ordena_matriz}
+		call sort # chama a funcao {sort}
 		j main_loop # desvia para {main_loop}
 	main_det:
 		bne s0, s5, main_invalid # desvia se s0 igual a s5
-		call det # chama a funcao {determinante}
+		call det # chama a funcao {det}
 		j main_loop # desvia para {main_loop}
 	main_invalid:
-		la a0, str_option_invalid # coloca o {str_invalid} em a0
+		la a0, str_option_invalid # coloca o {str_option_invalid} em a0
 		li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 		ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 		
@@ -141,9 +141,9 @@ input:
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 	
 	addi t0, zero, 7 # coloca o valor 7 em t0 (para um tamanho maximo da matriz igual a 6)
-	addi t1, zero, 2 # coloca o valor 2 em t1 (para um tamanho maximo da matriz igual a 2)
-	blt a0, t1, end # desvia (encerra o programa) se a0 for menor que t1
-	bge a0, t0, end # desvia (encerra o programa) se a0 for maior ou igual a t0
+	addi t1, zero, 2 # coloca o valor 2 em t1 (para um tamanho minimo da matriz igual a 2)
+	blt a0, t1, i_invalid # desvia se a0 for menor que t1 (tamanho minimo)
+	bge a0, t0, i_invalid # desvia se a0 for maior ou igual a t0 (tamanho maximo)
 	
 	mul a3, a0, a0 # faz o tamanho da matriz ao quadrado para obter o numero de elementos e coloca esse valor em a3
 	addi t0, a3, 0 # coloca o valor de a3 em t0 (contador dos numeros a serem lidos)
@@ -168,6 +168,10 @@ i_loop:
 	
 	addi t0, t0, -1 # decrementa o contador
 	j i_loop # desvia para {i_loop}
+i_invalid:
+	la a0, str_size_invalid # coloca o {str_size_invalid} em a0
+	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
+	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 i_end:
 	la a0, str_break # coloca o {str_break} em a0
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
@@ -342,7 +346,7 @@ s_switch:
 	
 	j s_loop # desvia para {s_loop}
 s_end:
-	la a0, str_sorted # coloca o {str_number} em a0
+	la a0, str_sorted # coloca o {str_sorted} em a0
 	li a7, 4 # coloca o valor 4 em a7 (4 = imprimir string)
 	ecall # faz a chamada de sistema (usando sempre o valor que esta em a7)
 
